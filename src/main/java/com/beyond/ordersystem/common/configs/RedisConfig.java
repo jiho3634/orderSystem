@@ -43,4 +43,25 @@ public class RedisConfig {
     //  redisTemplate.opsForValue().set(key. value)
     //  redisTemplate.opsForValue().get(key)
     //  redisTemplate.opsForValue().increment 또는 decrement
+
+
+    @Bean
+    @Qualifier("3")
+    public RedisConnectionFactory redisStockFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(this.host);
+        redisStandaloneConfiguration.setPort(this.port);
+        redisStandaloneConfiguration.setDatabase(2);
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    }
+
+    @Bean
+    @Qualifier("3")
+    public RedisTemplate<String, Object> redisStockTemplate(@Qualifier("3") RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        return redisTemplate;
+    }
 }

@@ -3,10 +3,7 @@ import com.beyond.ordersystem.common.auth.JwtTokenProvider;
 import com.beyond.ordersystem.common.dto.CommonErrorDto;
 import com.beyond.ordersystem.common.dto.CommonResDto;
 import com.beyond.ordersystem.member.domain.Member;
-import com.beyond.ordersystem.member.dto.MemberLoginDto;
-import com.beyond.ordersystem.member.dto.MemberRefreshDto;
-import com.beyond.ordersystem.member.dto.MemberResDto;
-import com.beyond.ordersystem.member.dto.MemberSaveReqDto;
+import com.beyond.ordersystem.member.dto.*;
 import com.beyond.ordersystem.member.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,15 +16,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Validated
 @RestController
 public class MemberController {
     private final MemberService memberService;
@@ -47,7 +45,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/create")
-    public ResponseEntity<?> memberCreate(@RequestBody MemberSaveReqDto dto) {
+    public ResponseEntity<?> memberCreate(@Valid @RequestBody MemberSaveReqDto dto) {
         try {
             Long id = memberService.memberCreate(dto).getId();
             HttpStatus sig = HttpStatus.CREATED;
@@ -81,7 +79,7 @@ public class MemberController {
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("id", member.getId());
         loginInfo.put("token", jwtToken);
-       loginInfo.put("refreshToken", jwtToken);
+        loginInfo.put("refreshToken", refreshToken);
         String msg = "login is successful";
         HttpStatus sig = HttpStatus.OK;
         return new ResponseEntity<>(new CommonResDto(sig, msg, loginInfo), sig);
@@ -114,7 +112,7 @@ public class MemberController {
         try {
             claims = Jwts.parser().setSigningKey(secretKeyRt).parseClaimsJws(rt).getBody();
         } catch (Exception e) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.UNAUTHORIZED.value(), "invalid refresh token??????????"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(),  "invalid refresh token"), HttpStatus.BAD_REQUEST);
         }
 
         String email = claims.getSubject();
@@ -131,5 +129,12 @@ public class MemberController {
         String msg = "login is successful";
         HttpStatus sig = HttpStatus.OK;
         return new ResponseEntity<>(new CommonResDto(sig, msg, info), sig);
+    }
+
+    @PatchMapping("/member/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+        memberService.resetPassword(resetPasswordDto);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "password is renewed", "ok");
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 }

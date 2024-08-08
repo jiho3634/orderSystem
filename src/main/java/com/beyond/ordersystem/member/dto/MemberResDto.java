@@ -12,17 +12,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResDto {
+    private Long id;
     private String name;
     private String email;
-    private String password;
     private Address address;
+    private int orderCount;
 
     public MemberResDto fromEntity(Member member) {
         return builder()
+                .id(member.getId())
                 .name(member.getName())
                 .email(member.getEmail())
-                .password(member.getPassword())
                 .address(member.getAddress())
+                .orderCount(member.getOrderList().size())
                 .build();
     }
 }

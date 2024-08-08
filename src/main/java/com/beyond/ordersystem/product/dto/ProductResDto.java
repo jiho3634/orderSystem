@@ -20,12 +20,12 @@ public class ProductResDto {
 
     public ProductResDto fromEntity(Product product) {
         return builder()
-                .id(id)
+                .id(product.getId())
                 .name(product.getName())
-                .category(category)
-                .price(price)
-                .stockQuantity(stockQuantity)
-                .imagePath(imagePath)
+                .category(product.getCategory())
+                .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .imagePath(product.getImagePath())
                 .build();
     }
 }

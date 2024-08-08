@@ -24,7 +24,6 @@ public class InitialDataLoader implements CommandLineRunner {
                     .password("12341234")
                     .role(Role.ADMIN)
                     .build());
-            System.out.println("hello world");
         }
     }
 }

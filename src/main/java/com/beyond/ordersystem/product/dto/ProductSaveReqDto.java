@@ -1,5 +1,4 @@
 package com.beyond.ordersystem.product.dto;
-
 import com.beyond.ordersystem.product.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,9 +3,8 @@ package com.beyond.ordersystem.ordering.controller;
 import com.beyond.ordersystem.common.dto.CommonErrorDto;
 import com.beyond.ordersystem.common.dto.CommonResDto;
 import com.beyond.ordersystem.ordering.domain.Ordering;
-import com.beyond.ordersystem.ordering.dto.OrderListResDto;
 import com.beyond.ordersystem.ordering.dto.OrderSaveReqDto;
-import com.beyond.ordersystem.ordering.service.OrderService;
+import com.beyond.ordersystem.ordering.service.OrderingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,17 +17,17 @@ import java.util.List;
 @RestController
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderingService orderingService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(OrderingService orderingService) {
+        this.orderingService = orderingService;
     }
 
     @PostMapping("/order/create")
     public ResponseEntity<?> orderCreate(@RequestBody List<OrderSaveReqDto> dto) {
         try {
-            Ordering ordering = orderService.orderCreate(dto);
+            Ordering ordering = orderingService.orderCreate(dto);
             CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "Order is successfully created", ordering.getId());
             return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -43,7 +42,7 @@ public class OrderController {
             return new ResponseEntity<>(
                     new CommonResDto(HttpStatus.OK
                             , "Order is successfully found"
-                            , orderService.orderList(pageable))
+                            , orderingService.orderList())
                     , HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -51,12 +50,12 @@ public class OrderController {
     }
 
     @GetMapping("/order/myorders")
-    public ResponseEntity<?> myOrders(Pageable pageable) {
+    public ResponseEntity<?> myOrders() {
         try {
             return new ResponseEntity<>(
                     new CommonResDto(HttpStatus.OK
                             , "Order is successfully found"
-                            , orderService.myOrders(pageable))
+                            , orderingService.myOrders())
                     , HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -70,7 +69,7 @@ public class OrderController {
             return new ResponseEntity<>(
                     new CommonResDto(HttpStatus.OK
                             , "Order is successfully canceled"
-                            , orderService.orderCancel(id))
+                            , orderingService.orderCancel(id))
                     , HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
