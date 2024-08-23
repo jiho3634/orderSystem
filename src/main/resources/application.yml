@@ -38,12 +38,12 @@ jwt:
   secretKeyRt: my_refresh_token_secret
 
 # aws s3 설정
-#cloud:
-#  aws:
-#    credentials:
-#      access-key:
-#      secret-key:
-#    region:
-#      static:
-#    s3:
-#      bucket:
+cloud:
+  aws:
+    credentials:
+      access-key: ${{secrets.S3_KEY}}
+      secret-key: ${{secrets.S3_SECRET}}
+    region:
+      static: ${{secrets.S3_REGION}}
+    s3:
+      bucket: ${{secrets.S3_BUCKET}}
