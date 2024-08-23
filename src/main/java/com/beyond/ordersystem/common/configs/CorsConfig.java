@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8081")    //  허용 url 명시 ; vue
+                .allowedOrigins("https://www.jiho-test.store")    //  허용 url 명시 ; vue
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);

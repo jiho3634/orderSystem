@@ -30,7 +30,7 @@ public class OrderingService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final StockInventoryService stockInventoryService;
-    private final StockDecreaseEventHandler stockDecreaseEventHandler;
+//    private final StockDecreaseEventHandler stockDecreaseEventHandler;
     private final SseController sseController;
 
     @Autowired
@@ -38,13 +38,13 @@ public class OrderingService {
             , MemberRepository memberService
             , ProductRepository productRepository
             , StockInventoryService stockInventoryService
-            , StockDecreaseEventHandler stockDecreaseEventHandler
+//            , StockDecreaseEventHandler stockDecreaseEventHandler
             , SseController sseController) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberService;
         this.productRepository = productRepository;
         this.stockInventoryService = stockInventoryService;
-        this.stockDecreaseEventHandler = stockDecreaseEventHandler;
+//        this.stockDecreaseEventHandler = stockDecreaseEventHandler;
         this.sseController = sseController;
     }
 
@@ -63,7 +63,7 @@ public class OrderingService {
                     throw new IllegalArgumentException("재고 부족");
                 }
                 //  rdb 에 재고를 업데이트. rabbitmq 를 통해 비동기적으로 이벤트 처리.
-                stockDecreaseEventHandler.publish(new StockDecreaseEvent(product.getId(), dto.getProductCount()));
+//                stockDecreaseEventHandler.publish(new StockDecreaseEvent(product.getId(), dto.getProductCount()));
             } else {
                 if (product.getStockQuantity() < quantity) {
                     throw new IllegalArgumentException("재고 부족");
