@@ -16,7 +16,7 @@ jobs:
               run: docker build -t jihokim2/order-be:latest .   
 
             - name: dockerhub login
-              uses: docker/logi0n-action@v1
+              uses: docker/login-action@v1
               with:
                 username: ${{secrets.DOCKER_EMAIL}}
                 password: ${{secrets.DOCKER_PASSWORD}}
